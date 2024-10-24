@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{% if form.instance.pk %}Update Group{% else %}Create New Group{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+  <a href="{% url 'groups:group_list' %}" class="btn btn-secondary">Back to list</a>
+{% endblock %}
