@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'groups',
     'accounts',
     'tasks',
+    'core'
 ]
 
 MIDDLEWARE = [
