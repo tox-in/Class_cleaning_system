@@ -1,9 +1,9 @@
 from django import forms
 from .models import Task
-from groups.models import Group
+from groups.models import CleaningGroup
 
 class TaskForm(forms.ModelForm):
-    group = forms.ModelChoiceField(queryset=Group.objects.all())
+    group = forms.ModelChoiceField(queryset=CleaningGroup.objects.all())
     
     class Meta:
         model = Task

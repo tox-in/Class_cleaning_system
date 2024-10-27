@@ -1,5 +1,5 @@
 from django import forms
-from .models import Group
+from .models import CleaningGroup
 from accounts.models import User
 
 class GroupForm(forms.ModelForm):
@@ -10,5 +10,5 @@ class GroupForm(forms.ModelForm):
     )
     
     class Meta:
-        model = Group
+        model = CleaningGroup
         fields = ['name', 'members']

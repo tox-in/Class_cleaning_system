@@ -4,7 +4,7 @@ from groups.models import CleaningGroup
 # Create your models here.
 class Task(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(default="cleaning the class")
     group = models.ForeignKey(CleaningGroup, on_delete=models.CASCADE, related_name="tasks")
     assigned_date = models.DateTimeField(auto_now_add=True)
     due_date = models.DateTimeField()
