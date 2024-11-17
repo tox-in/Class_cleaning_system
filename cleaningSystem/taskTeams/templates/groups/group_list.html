@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+  <div class="flex justify-between">
+    <h1 class="mb-6 text-3xl">Group List</h1>
+    <a href="{% url 'group_create' %}" class="inline-block py-4 px-8 text-lg rounded-md text-white bg-cyan-500 hover:text-white-700">Add Group</a>
+  </div>
+  <ul>
+    {% if groups %}
+      {% for group in groups %}
+      <li>
+        <a href="{% url 'group_detail' group.pk %}">{{ group.name }}</a>
+      </li>
+      {% endfor %}
+    {% else %}
+      <h2 class="mt-4 py-4 px-8 text-lg rounded-xl text-slate-700">
+        Oops :(  Looks like there is no Group available
+      </h2>
+    {% endif %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation List</title>
+</head>
+<body>
+    <h1>Reservations Ordered by Cleaning Date and Priority</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Cleaning Type</th>
+                <th>Cleaning Date</th>
+                <th>Priority</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.client.username }}</td>
+                    <td>{{ reservation.cleaning_type }}</td>
+                    <td>{{ reservation.cleaning_date }}</td>
+                    <td>{{ reservation.priority }}</td>
+                    <td>{{ reservation.price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %} {% block content %}
+<div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+  <h1 class="mb-6 text-3xl">
+    {% if form.instance.pk %}Edit Group{% else %}Create Group{% endif %}
+  </h1>
+
+  <form method="post" action=".">
+    {% csrf_token %}
+
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="mb-3 p-6 bg-red-100 rounded-xl">
+      <ul>
+        {% for field, errors in form.errors.items %}
+          <li><strong>{{ field|capfirst }}:</strong> {{ errors|join:", " }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Name field -->
+    <div class="mb-3">
+      <label for="id_name" class="inline-block mb-2 font-medium">Group Name</label><br />
+      {{ form.name }}
+    </div>
+
+    <!-- Specialization field -->
+    <div class="mb-3">
+      <label for="id_specialization" class="inline-block mb-2 font-medium">Specialization</label><br />
+      {{ form.specialization }}
+    </div>
+
+    <!-- Chief field -->
+    <div class="mb-3">
+      <label for="id_chief" class="inline-block mb-2 font-medium">Chief</label><br />
+      {{ form.chief }}
+    </div>
+
+    <!-- Members field -->
+    <div class="mb-3">
+      <label for="id_members" class="inline-block mb-2 font-medium">Members (max: 5)</label><br />
+      {{ form.members }}
+      <small class="block mt-1 text-gray-600">Hold down Ctrl (Windows) or Cmd (Mac) to select multiple members.</small>
+    </div>
+
+    <!-- Rating field -->
+    <div class="mb-3">
+      <label for="id_rating" class="inline-block mb-2 font-medium">Rating</label><br />
+      {{ form.rating }}
+    </div>
+    
+    <!-- Submit button -->
+     <div class="flex justify-between">
+    <button
+      type="submit"
+      class="mt-4 py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white"
+    >
+      Save
+    </button>
+  </form>
+    <a
+    href="{% url 'group_list' %}"
+    class="mt-4 inline-block py-4 px-8 text-lg rounded-xl text-white bg-cyan-500 hover:text-white-700"
+    >Cancel</a>
+  </div>
+</div>
+{% endblock %}
