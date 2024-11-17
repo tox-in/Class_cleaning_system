@@ -18,7 +18,7 @@ def send_notification_email(subject, message, recipient_list):
 def role_required(*roles):
     def decorator(func):
         def wrapper(request, *args, **kwargs):
-            if not hasattr(request.user, "role") or request.user.role not in roles:
+            if request.user.role not in roles:
                 return HttpResponseForbidden("You are not authorized to access this page.")
             return func(request, *args, **kwargs)
         return wrapper
@@ -94,7 +94,10 @@ def rate_group(request, reservation_id):
     return render(request, 'tasks/rate_group.html', {'reservation': reservation})
 
 @login_required
+@role_required('Client')
 def client_dashboard(request):
+    if not isinstance(request.user, User):
+        raise ValueError("The request user is not a valid User instance.")
     reservations = Reservation.objects.filter(client=request.user)
     return render(request, 'tasks/client_dashboard.html', {'reservations':reservations})
 

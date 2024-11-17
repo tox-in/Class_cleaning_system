@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.contrib.auth import logout, get_user_model
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm
 from django.contrib import messages
+from .forms import LoginForm
 
 def signup(request):
     if request.user.is_authenticated:
@@ -27,19 +29,47 @@ def signup(request):
             # Create the user
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password1'])
-            user.role = 'Client'  # This could be dynamic based on your needs
             user.save()
 
             # Success message and redirect
             messages.success(request, "Account created successfully! You can now log in.")
             return redirect('login')
         else:
-            # Error message if form is not valid
+            # If form is invalid, print errors for debugging
+            print(form.errors)
             messages.error(request, "Error creating account. Please try again.")
     else:
         form = CustomUserCreationForm()
     
     return render(request, 'registration/signup.html', {'form': form})
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect(request.GET.get('next', 'home'))
+    
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, "You have successfully logged in.")
+                next_url = request.GET.get('next', 'home')  # Redirect to 'next' URL or default to 'home'
+                return redirect(next_url)  # Redirect to home or wherever you want
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid form submission.")
+    else:
+        form = LoginForm()
+    
+    return render(request, 'registration/login.html', {'form': form})
+
+
 
 def logout_view(request):
     logout(request)

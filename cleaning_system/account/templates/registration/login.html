@@ -32,4 +32,16 @@
         <p>Don't have an account? <a href="{% url 'signup' %}" class="text-teal-600 hover:underline">Sign up</a></p>
     </div>
 </div>
+
+{% if form.errors %}
+    <div class="alert alert-danger mt-4">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 {% endblock content %}
