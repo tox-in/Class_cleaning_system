@@ -45,12 +45,16 @@ def signup(request):
 
 
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect(request.GET.get('next', 'home'))
+    
     
     if request.method == 'POST':
+        print(request.POST)
+        
         form = LoginForm(request.POST)
+        
+        print("checking validity")
         if form.is_valid():
+            print("checked validity")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
@@ -58,12 +62,13 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "You have successfully logged in.")
-                next_url = request.GET.get('next', 'home')  # Redirect to 'next' URL or default to 'home'
-                return redirect(next_url)  # Redirect to home or wherever you want
+                return redirect('home')  # Redirect to home or wherever you want
             else:
                 messages.error(request, "Invalid username or password.")
         else:
+            print("validity failed")
             messages.error(request, "Invalid form submission.")
+            print(form.errors) 
     else:
         form = LoginForm()
     

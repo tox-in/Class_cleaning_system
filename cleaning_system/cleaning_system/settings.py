@@ -124,14 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Using DB session backend
-SESSION_COOKIE_AGE = 3600  # Session expires after 1 hour of inactivity
-
-
 STATIC_URL = 'static/'
-LOGIN_REDIRECT_URL = '/client/'
-LOGOUT_REDIRECT_URL = '/login/'  # Redirects user to login after logout
-# Redirect after successful login
+LOGIN_REDIRECT_URL = '/client/'  # Redirect after successful login
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
