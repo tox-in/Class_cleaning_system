@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Cleaning Type</th>
+                <th>Address</th>
+                <th>House Number</th>
+                <th>Cleaning Date</th>
+                <th>Assigned Group</th>
+                <th>Approved</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.client.username }}</td>
+                    <td>{{ reservation.cleaning_type }}</td>
+                    <td>{{ reservation.address }}</td>
+                    <td>{{ reservation.house_number }}</td>
+                    <td>{{ reservation.cleaning_date }}</td>
+                    <td>{{ reservation.assigned_group.name }}</td>
+                    <td>{{ reservation.approved }}</td>
+                    <td>
+                        <a href="{% url 'reservation_detail' reservation.id %}">View</a>
+                        {% if not reservation.approved %}
+                            <form method="post" action="{% url 'approve_reservation' reservation.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Approve</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

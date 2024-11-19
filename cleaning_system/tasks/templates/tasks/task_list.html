@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h1>Task List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Cleaning Type</th>
+                <th>Address</th>
+                <th>House Number</th>
+                <th>Cleaning Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.client.username }}</td>
+                    <td>{{ reservation.cleaning_type }}</td>
+                    <td>{{ reservation.address }}</td>
+                    <td>{{ reservation.house_number }}</td>
+                    <td>{{ reservation.cleaning_date }}</td>
+                    <td>{{ 'Approved' if reservation.approved else 'Pending' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

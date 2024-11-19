@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Detail</title>
+</head>
+<body>
+    <h1>Reservation Details</h1>
+    <p><strong>Client:</strong> {{ reservation.client.username }}</p>
+    <p><strong>Email:</strong> {{ reservation.client.email }}</p>
+    <p><strong>Cleaning Type:</strong> {{ reservation.cleaning_type }}</p>
+    <p><strong>Address:</strong> {{ reservation.address }}</p>
+    <p><strong>House Number:</strong> {{ reservation.house_number }}</p>
+    <p><strong>Cleaning Date:</strong> {{ reservation.cleaning_date }}</p>
+    <p><strong>Assigned Group:</strong> {{ reservation.assigned_group.name }}</p>
+    <p><strong>Group Chief:</strong> {{ reservation.assigned_group.chief.username }}</p>
+    <p><strong>Price:</strong> ${{ reservation.price }}</p>
+    <p><strong>Approved:</strong> {{ reservation.approved }}</p>
+
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>
