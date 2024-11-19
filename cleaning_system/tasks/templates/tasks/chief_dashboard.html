@@ -1,0 +1,16 @@
+{% extends 'taks/base.html' %}
+{% block content %}
+<h1>Group Tasks</h1>
+<ul>
+    {% for reservation in reservations %}
+    <li>
+        <strong>Client:</strong> {{ reservation.client.username }}<br>
+        <strong>Cleaning Type:</strong> {{ reservation.cleaning_type }}<br>
+        <strong>Address:</strong> {{ reservation.address }}<br>
+        <strong>Cleaning Date:</strong> {{ reservation.cleaning_date }}<br>
+        <strong>Price:</strong> ${{ reservation.price }}<br>
+        <strong>Client Approval:</strong> {{ reservation.approved_by_client }}<br>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
