@@ -35,15 +35,15 @@ class GroupForm(forms.ModelForm):
             'specialization': forms.Select(attrs={'class': 'w-full py-4 px-6 rounded-xl'}),
         }
 
-    # def clean_members(self):
-    #     members = self.cleaned_data.get('members')
-    #     if members.count() > 5:
-    #         raise forms.ValidationError("A group cannot have more than 5 members.")
-    #     return members
+    def clean_members(self):
+        members = self.cleaned_data.get('members')
+        if members.count() > 5:
+            raise forms.ValidationError("A group cannot have more than 5 members.")
+        return members
 
-    # def clean_chief(self):
-    #     chief = self.cleaned_data.get('chief')
-    #     print(chief)
-    #     if not chief:
-    #         raise forms.ValidationError("A chief must be selected.")
-    #     return chief
+    def clean_chief(self):
+        chief = self.cleaned_data.get('chief')
+        print(chief)
+        if not chief:
+            raise forms.ValidationError("A chief must be selected.")
+        return chief

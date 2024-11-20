@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Your Reservations</h1>
+
+{% if reservations %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cleaning Type</th>
+                <th>Assigned Group</th>
+                <th>Group Chief</th>
+                <th>Cleaning Date</th>
+                <th>Approved by Admin</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.cleaning_type }}</td>
+                    <td>{{ reservation.assigned_group.name }}</td>
+                    <td>{{ reservation.assigned_group.chief.username }}</td>
+                    <td>{{ reservation.cleaning_date }}</td>
+                    <td>
+                        {% if reservation.approved_by_admin %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-danger">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No reservations found.</p>
+{% endif %}
+{% endblock %}

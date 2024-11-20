@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from groups.models import Group
-from account.models import User
+from taskTeams.models import Group
+from core.models import CustomUser
 from .models import Reservation
+from .forms import ReservationForm
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.core.exceptions import PermissionDenied
 
 
 def role_required(*roles):
@@ -18,38 +20,36 @@ def role_required(*roles):
 # Create your views here.
 @login_required
 def create_reservation(request):
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'Client':
+        raise PermissionDenied("You must be a Client to create a reservation.")
+
     if request.method == 'POST':
-        cleaning_type = request.POST['cleaning_type']
-        address = request.POST['address']
-        house_number = request.POST['house_number']
-        cleaning_date = request.POST['cleaning_date']
+        form = ReservationForm(request.POST)
         
-        if not all([cleaning_type, address, house_number, cleaning_date]):
-            return HttpResponseBadRequest("Missing required fields.")
-        
-        
-        group = Group.objects.filter(specialization=cleaning_type).order_by('ratings').first()
-        
-        if not group:
-            return render(request, 'tasks/create_reservation.html', {'error':"No group available for the selected cleaning type."})
-        
-        price = 50.00
-        
-        reservation = Reservation.objects.create(
-            client=request.user,
-            cleaning_type=cleaning_type,
-            address=address,
-            house_number=house_number,
-            cleaning_date=cleaning_date,
-            price=price,
-            assigned_group=group
-        )
-        
+        if form.is_valid():
+            cleaning_type = form.cleaned_data['cleaning_type']
 
-        return redirect('client_dashboard')
+            group = Group.objects.filter(specialization=cleaning_type).order_by('-rating').first()
+            
+            if not group:
+                return render(request, 'reservations/create_reservation.html', {
+                    'form': form,
+                    'error': "No group is available for the selected cleaning type."
+                })
 
-    return render(request, 'reservations/create_reservation.html', {'error': "No group available for the selected cleaning type."})
+            # Save the reservation
+            reservation = form.save(commit=False)
+            reservation.client = request.user 
+            reservation.group = group
+            reservation.price = 50.00
+            reservation.save() 
+            
+            return redirect('client_dashboard')
 
+    else:
+        form = ReservationForm()
+
+    return render(request, 'reservations/create_reservation.html', {'form': form})
 
 @login_required
 def rate_group(request, reservation_id):
@@ -63,15 +63,15 @@ def rate_group(request, reservation_id):
         
         return redirect('client_dashboard')
     
-    return render(request, 'tasks/rate_group.html', {'reservation': reservation})
+    return render(request, 'feedbacks/rate_group.html', {'reservation': reservation})
 
 @login_required
 @role_required('Client')
 def client_dashboard(request):
-    if not isinstance(request.user, User):
+    if not isinstance(request.user, CustomUser):
         raise ValueError("The request user is not a valid User instance.")
     reservations = Reservation.objects.filter(client=request.user)
-    return render(request, 'tasks/client_dashboard.html', {'reservations':reservations})
+    return render(request, 'dashboard/client_dashboard.html', {'reservations':reservations})
 
 @login_required
 @role_required('Admin')
@@ -87,13 +87,13 @@ def chief_dashboard(request):
 @login_required
 def reservation_detail(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
-    return render(request, 'tasks/reservation_detail.html', {'reservation': reservation})
+    return render(request, 'reservations/reservation_detail.html', {'reservation': reservation})
 
 @login_required
 @role_required('Chief')
 def task_list(request):
     reservations = Reservation.objects.filter(assigned_group__chief=request.user)
-    return render(request, 'tasks/task_list.html', {'reservations': reservations})
+    return render(request, 'reservations/reservation_list.html', {'reservations': reservations})
 
 @login_required
 @role_required('Admin')
