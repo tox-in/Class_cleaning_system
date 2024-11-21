@@ -76,7 +76,7 @@ def create_reservation(request):
 
         return redirect('client_dashboard')
 
-    return render(request, 'tasks/create_reservation.html')
+    return render(request, 'tasks/create_reservation.html', {'error': "No group available for the selected cleaning type."})
 
 
 @login_required

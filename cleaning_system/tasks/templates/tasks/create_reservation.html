@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Create Reservation
+{% endblock title %}
+
+{% block content %}
+<div class="w-3/4 my-8 mx-auto p-6 bg-gray-100 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-center mb-6">Create Reservation</h1>
+    
+    {% if error %}
+        <div class="mb-6 p-4 bg-red-100 text-red-600 rounded">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <form method="post" action=".">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            <label for="cleaning_type" class="block mb-2 font-medium">Cleaning Type</label>
+            <select name="cleaning_type" id="cleaning_type" class="w-full p-2 border rounded">
+                <option value="" disabled selected>Select Cleaning Type</option>
+                {% for key, value in form.cleaning_type.field.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <label for="address" class="block mb-2 font-medium">Address</label>
+            <textarea name="address" id="address" rows="3" class="w-full p-2 border rounded" placeholder="Enter your address"></textarea>
+        </div>
+        
+        <div class="mb-4">
+            <label for="house_number" class="block mb-2 font-medium">House Number</label>
+            <input type="text" name="house_number" id="house_number" class="w-full p-2 border rounded" placeholder="Enter your house number">
+        </div>
+        
+        <div class="mb-4">
+            <label for="cleaning_date" class="block mb-2 font-medium">Cleaning Date</label>
+            <input type="date" name="cleaning_date" id="cleaning_date" class="w-full p-2 border rounded">
+        </div>
+        
+        <button type="submit" class="w-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 rounded">
+            Create Reservation
+        </button>
+    </form>
+</div>
+{% endblock content %}
