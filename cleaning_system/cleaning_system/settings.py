@@ -55,10 +55,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cleaning_system.urls'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-LOGIN_REDIRECT_URL = '/client/'  # Redirect after successful login
+LOGIN_REDIRECT_URL = '/'  # Redirect after successful login
 LOGOUT_REDIRECT_URL = '/' # Redirect after successful logout
 
 # Default primary key field type

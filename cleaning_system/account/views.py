@@ -1,15 +1,18 @@
 from django.shortcuts import render
-from django.contrib.auth import logout, get_user_model
+from django.contrib.auth import logout, get_user_model 
+from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import LoginForm
+from datetime import datetime
 
 def signup(request):
-    if request.user.is_authenticated:
-        return redirect('home')
+    # if request.user.is_authenticated:
+    #     return redirect('home')
     
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -42,38 +45,6 @@ def signup(request):
         form = CustomUserCreationForm()
     
     return render(request, 'registration/signup.html', {'form': form})
-
-
-def login_view(request):
-    
-    
-    if request.method == 'POST':
-        print(request.POST)
-        
-        form = LoginForm(request.POST)
-        
-        print("checking validity")
-        if form.is_valid():
-            print("checked validity")
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                messages.success(request, "You have successfully logged in.")
-                return redirect('home')  # Redirect to home or wherever you want
-            else:
-                messages.error(request, "Invalid username or password.")
-        else:
-            print("validity failed")
-            messages.error(request, "Invalid form submission.")
-            print(form.errors) 
-    else:
-        form = LoginForm()
-    
-    return render(request, 'registration/login.html', {'form': form})
-
 
 
 def logout_view(request):
