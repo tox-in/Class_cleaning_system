@@ -12,6 +12,7 @@ class ReservationForm(forms.ModelForm):
             'house_number': forms.NumberInput(attrs={'placeholder': 'House number', 'class': 'w-full py-4 px-6 rounded-xl'}),
             'cleaning_date': forms.DateInput(attrs={'type': 'date', 'class': 'w-full py-4 px-6 rounded-xl'}),
             'cleaning_type': forms.Select(attrs={'class': 'w-full py-4 px-6 rounded-xl'}),
+            'priority': forms.Select(attrs={'class': 'w-full py-4 px-6 rounded-xl'}),
         }
         
         error_messages = {

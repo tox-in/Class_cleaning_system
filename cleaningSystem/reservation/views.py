@@ -20,24 +20,25 @@ def role_required(*roles):
 # Create your views here.
 @login_required
 def create_reservation(request):
-    if not hasattr(request.user, 'profile') or request.user.profile.role != 'Client':
+    if not hasattr(request.user, 'profile') or request.user.role != 'Client':
         raise PermissionDenied("You must be a Client to create a reservation.")
 
     if request.method == 'POST':
+        print(request.POST)
+        
         form = ReservationForm(request.POST)
         
         if form.is_valid():
             cleaning_type = form.cleaned_data['cleaning_type']
 
             group = Group.objects.filter(specialization=cleaning_type).order_by('-rating').first()
-            
+            print(group)
             if not group:
                 return render(request, 'reservations/create_reservation.html', {
                     'form': form,
                     'error': "No group is available for the selected cleaning type."
                 })
 
-            # Save the reservation
             reservation = form.save(commit=False)
             reservation.client = request.user 
             reservation.group = group

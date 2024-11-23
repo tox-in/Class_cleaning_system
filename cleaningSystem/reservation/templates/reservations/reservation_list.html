@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation List</title>
-</head>
-<body>
-    <h1>Reservations Ordered by Cleaning Date and Priority</h1>
+{% extends 'core/baseForm.html' %}
+
+{% block title %}
+    Reservation List
+{% endblock title %}
+
+{% block content %}
+<div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+    <h1 class="mb-6 text-3xl">Reservations Ordered by Cleaning Date and Priority</h1>
     <table border="1">
         <thead>
             <tr>
@@ -29,5 +29,5 @@
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+{% endblock content %}
