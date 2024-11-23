@@ -6,6 +6,7 @@ class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
         fields = ['cleaning_type', 'address', 'house_number', 'cleaning_date', 'priority']
+        exclude = ['client', 'assigned_group', 'price', 'approved_by_client', 'approved_by_admin']
         
         widgets = {
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'w-full py-4 px-6 rounded-xl'}),
