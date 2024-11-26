@@ -1,15 +1,10 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import User
 
-class CustomUserCreationForm(AuthenticationForm):
-    username = forms.CharField(
-        label="Username",
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Enter your username',
-            'class': 'form-control'
-        })
-    )
+class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label="Email",
         widget=forms.EmailInput(attrs={
@@ -17,37 +12,31 @@ class CustomUserCreationForm(AuthenticationForm):
             'class': 'form-control'
         })
     )
-    password1 = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Enter your password',
-            'class': 'form-control'
-        })
+    
+    role = forms.ChoiceField(
+        choices=User.ROLE_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
-    password2 = forms.CharField(
-        label='Confirm Password',
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Confirm your password',
-            'class': 'form-control'
-        })
-    )
+    # The default UserCreationForm includes 'password1' and 'password2', so we don't need to redefine them here
 
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'password1', 'password2', 'role']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Remove any fields that are not explicitly defined
-        if 'password' in self.fields:
-            del self.fields['password']
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email is already registered.")
+        return email
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords do not match")
-        return password2
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.role = self.cleaned_data['role']
+        if commit:
+            user.save()
+        return user
+
 
 
 class LoginForm(AuthenticationForm):

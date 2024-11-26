@@ -1,13 +1,18 @@
 from django.shortcuts import render
-from django.contrib.auth import logout, get_user_model
+from django.contrib.auth import logout, get_user_model 
+from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from .forms import LoginForm
+from datetime import datetime
 
 def signup(request):
-    if request.user.is_authenticated:
-        return redirect('home')
+    # if request.user.is_authenticated:
+    #     return redirect('home')
     
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -27,19 +32,20 @@ def signup(request):
             # Create the user
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password1'])
-            user.role = 'Client'  # This could be dynamic based on your needs
             user.save()
 
             # Success message and redirect
             messages.success(request, "Account created successfully! You can now log in.")
             return redirect('login')
         else:
-            # Error message if form is not valid
+            # If form is invalid, print errors for debugging
+            print(form.errors)
             messages.error(request, "Error creating account. Please try again.")
     else:
         form = CustomUserCreationForm()
     
     return render(request, 'registration/signup.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)

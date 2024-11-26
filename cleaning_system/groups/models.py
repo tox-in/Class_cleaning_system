@@ -1,7 +1,6 @@
 from django.db import models
 from account.models import User
 
-# Create your models here.
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
     specialization = models.CharField(
@@ -31,10 +30,10 @@ class Group(models.Model):
     rating = models.FloatField(default=0.0)
 
     def save(self, *args, **kwargs):
-        # Ensure no more than 5 members (including the chief)
-        if self.members.count() >= 5:
-            raise ValueError("A group cannot have more than 5 members.")
         super().save(*args, **kwargs)
+        
+        if self.members.count() > 5:
+            raise ValueError("A group cannot have more than 5 members.")
 
     def __str__(self):
         return f"{self.name} ({self.specialization})"

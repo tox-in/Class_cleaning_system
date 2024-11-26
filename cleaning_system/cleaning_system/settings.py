@@ -55,10 +55,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cleaning_system.urls'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,14 +129,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Using DB session backend
-SESSION_COOKIE_AGE = 3600  # Session expires after 1 hour of inactivity
-
-
 STATIC_URL = 'static/'
-LOGIN_REDIRECT_URL = '/client/'
-LOGOUT_REDIRECT_URL = '/login/'  # Redirects user to login after logout
-# Redirect after successful login
+LOGIN_REDIRECT_URL = '/'  # Redirect after successful login
+LOGOUT_REDIRECT_URL = '/' # Redirect after successful logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
