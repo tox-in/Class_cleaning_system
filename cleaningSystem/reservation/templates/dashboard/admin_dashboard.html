@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block extra_head %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -146,9 +145,9 @@
     <!-- Groups and Members -->
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-xl font-bold mb-4">Groups and Members</h2>
-        <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% for group in groups_with_members %}
-            <div class="border-b pb-4">
+            <div class="border rounded-lg p-4">
                 <h3 class="text-lg font-semibold mb-2">{{ group.name }} ({{ group.specialization }})</h3>
                 <p class="text-sm text-gray-600 mb-2">Chief: {{ group.chief.username }}</p>
                 <p class="text-sm text-gray-600 mb-2">Rating: {{ group.rating|floatformat:1 }}/5</p>
@@ -168,14 +167,16 @@
     <!-- Task Completion Chart -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h2 class="text-xl font-bold mb-4">Task Completion Distribution</h2>
-        <canvas id="completionChart"></canvas>
+        <div style="height: 300px;">
+            <canvas id="completionChart"></canvas>
+        </div>
     </div>
 </div>
 
 <!-- Charts JavaScript -->
-<script>
+<script defer>
     document.addEventListener('DOMContentLoaded', function() {
-        try {
+        
             // Monthly Tasks Distribution Chart
             const monthlyCtx = document.getElementById('monthlyReservationsChart').getContext('2d');
             const monthlyData = {{ monthly_reservations|safe }};
@@ -225,6 +226,87 @@
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Most Active Clients Chart
+        const activeClientsCtx = document.getElementById('activeClientsChart').getContext('2d');
+        const clientsData = [
+            {% for client in top_clients %}
+                {
+                    "username": "{{ client.username }}",
+                    "reservationCount": {{ client.reservations.count }}
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        new Chart(activeClientsCtx, {
+            type: 'bar',
+            data: {
+                labels: clientsData.map(d => d.username),
+                datasets: [{
+                    label: 'Number of Reservations',
+                    data: clientsData.map(d => d.reservationCount),
+                    backgroundColor: '#36A2EB',
+                    borderColor: '#2693e6',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Top Performing Groups Chart
+        const topGroupsCtx = document.getElementById('topGroupsChart').getContext('2d');
+        const groupsData = [
+            {% for group in top_groups %}
+                {
+                    name: "{{ group.name }}",
+                    rating: {{ group.rating|default:0|floatformat:1 }}
+                },
+            {% endfor %}
+        ];
+        new Chart(topGroupsCtx, {
+            type: 'bar',
+            data: {
+                labels: groupsData.map(d => d.name),
+                datasets: [{
+                    label: 'Rating',
+                    data: groupsData.map(d => d.rating),
+                    backgroundColor: '#4BC0C0',
+                    borderColor: '#3da3a3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
